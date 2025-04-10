@@ -5,9 +5,12 @@ __pycache__/
 # Virtual Environment
 env/
 .venv/
+venv310/
+
 
 # Sensitive data
 .env
 
 # Data files
 data/
+data/results/
