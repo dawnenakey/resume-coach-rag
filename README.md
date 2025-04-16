@@ -23,3 +23,30 @@ uvicorn src.api:app --reload
 - Extracts and returns plain text from resumes
 - FastAPI Swagger UI available at `http://127.0.0.1:8000/docs`
 - Modular structure for future extensions (semantic search, RAG models)
+
+## Testing
+Use the `/upload_resume/` endpoint via Swagger UI to test file uploads.
+Example: Upload `sample_resume.pdf` under `data/sample_resumes/`.
+
+## Project Structure
+.
+├── data/                     # Sample resumes (optional)
+├── src/
+│   ├── api.py               # FastAPI app entry point
+│   ├── resume_parser.py     # Resume parsing logic
+├── uploads/                 # Uploaded resumes (created at runtime)
+├── requirements.txt         # Python dependencies
+├── .gitignore
+└── README.md
+
+## Docker (Optional)
+1. Build the container:
+docker build -t resume-coach .
+
+2. Run the container:
+docker run -p 8000:8000 resume-coach
+
+Then open: http://127.0.0.1:8000/docs
+
+## Author
+Dawnena Key - [@dawnenakey](https://github.com/dawnenakey)
