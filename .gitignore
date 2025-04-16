@@ -1,16 +1,27 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
 # Virtual Environment
 env/
 .venv/
 venv310/
 
+# FastAPI cache and metadata
+*.log
 
 # Sensitive data
 .env
 
+# System files
+.DS_Store
+
 # Data files
 data/
 data/results/
+
+# Bytecode cache
+*.py[cod]
+
