@@ -1,0 +1,14 @@
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Resume</title>
+</head>
+<body>
+    <h1>Upload Your Resume</h1>
+    <form action="/upload_resume/" enctype="multipart/form-data" method="post">
+        <input type="file" name="file" accept=".pdf,.docx" required>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

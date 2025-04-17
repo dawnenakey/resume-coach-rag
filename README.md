@@ -24,6 +24,28 @@ uvicorn src.api:app --reload
 - FastAPI Swagger UI available at `http://127.0.0.1:8000/docs`
 - Modular structure for future extensions (semantic search, RAG models)
 
+## Sample Output
+{
+  "filename": "sample_resume.pdf",
+  "extracted_text": "A highly motivated and collaborative software engineer...",
+  "baseline_scores": {
+    "femininity_score": 0.6215,
+    "masculinity_score": 0.4983
+  },
+  "keyword_frequency": {
+    "python": 3,
+    "collaborative": 1,
+    "cloud": 2,
+    "api": 1,
+    "empathy": 1,
+    "leadership": 2,
+    "machine learning": 1,
+    "azure": 0,
+    "aws": 1
+  }
+}
+
+
 ## Testing
 Use the `/upload_resume/` endpoint via Swagger UI to test file uploads.
 Example: Upload `sample_resume.pdf` under `data/sample_resumes/`.

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Coach Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background-color: #f8f9fa; }
+        h2 { color: #333; }
+        .block { margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        pre { white-space: pre-wrap; word-wrap: break-word; background: #eee; padding: 1rem; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.5rem 1rem; text-align: left; border-bottom: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Resume Analysis Results</h1>
+
+    <div class="block">
+        <h2>Resume Preview (first 1000 chars)</h2>
+        <pre>{{ resume_text }}</pre>
+    </div>
+
+    <div class="block">
+        <h2>Baseline Trait Scores</h2>
+        <ul>
+            <li><strong>Femininity Score:</strong> {{ scores.femininity_score }}</li>
+            <li><strong>Masculinity Score:</strong> {{ scores.masculinity_score }}</li>
+        </ul>
+    </div>
+
+    <div class="block">
+        <h2>Keyword Frequencies</h2>
+        <table>
+            <thead><tr><th>Keyword</th><th>Frequency</th></tr></thead>
+            <tbody>
+                {% for keyword, count in keyword_freq.items() %}
+                <tr><td>{{ keyword }}</td><td>{{ count }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="block">
+        <h2>Job Match Similarity</h2>
+        <p><strong>Score:</strong> {{ similarity_score }}</p>
+    </div>
+</body>
+</html>
