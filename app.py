@@ -13,56 +13,68 @@ import pandas as pd
 # Initialize Adzuna API
 adzuna = AdzunaAPI()
 
-# Page config
+# Page configuration
 st.set_page_config(
     page_title="Resume Coach RAG",
-    page_icon="📄",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS
 st.markdown("""
-    <style>
+<style>
     .stApp {
-        max-width: 1200px;
-        margin: 0 auto;
+        background-color: #1E1E1E;
+        color: #FFFFFF;
     }
-    .metric-card {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 6px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .uploadfile {
+        border: 2px dashed #4B4B4B;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: #2D2D2D;
     }
-    .salary-range {
-        font-size: 1.2rem;
-        color: #2c5282;
+    .uploadfile:hover {
+        border-color: #0066FF;
     }
-    .location-insights {
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: #f0f9ff;
-        border-radius: 6px;
+    .css-1v0mbdj.e115fcil1 {
+        border-radius: 8px;
+        padding: 1.5rem;
+        background: #2D2D2D;
     }
-    </style>
+    .stButton > button {
+        width: 100%;
+        background: #0066FF;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+    }
+</style>
 """, unsafe_allow_html=True)
 
-# Title and description
-st.title("Resume Coach RAG 📄")
+# App title
+st.title("Resume Coach RAG")
+
+# App description
 st.markdown("""
-    Upload your resume and get instant AI-powered analysis with real-time job market insights.
-    Our system will analyze your resume's content, match it against current job requirements,
-    and provide actionable insights based on real job market data.
+Upload your resume and get instant AI-powered analysis with real-time job market insights. 
+Our system will analyze your resume's content, match it against current job requirements, 
+and provide actionable insights based on real job market data.
 """)
 
 # Location selector
-selected_location = st.selectbox(
-    "Select Job Market Location",
-    ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Denver"],
-    index=0
-)
+locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle"]
+selected_location = st.selectbox("Select Job Market Location", locations)
 
-# File upload
-uploaded_file = st.file_uploader("Choose your resume file", type=["pdf", "docx"])
+# File uploader with custom styling
+st.markdown("### Choose your resume file")
+uploaded_file = st.file_uploader(
+    "Drag and drop file here",
+    type=["pdf", "docx"],
+    help="Limit 200MB per file • PDF, DOCX",
+    key="resume_uploader"
+)
 
 if uploaded_file:
     # Save uploaded file temporarily
@@ -189,4 +201,7 @@ if uploaded_file:
 
 # Footer
 st.markdown("---")
-st.markdown("Built with ❤️ using Streamlit, RAG technology, and Adzuna API") 
+st.markdown(
+    "Built with ❤️ using Streamlit, RAG technology, and Adzuna API",
+    help="Powered by AI and real-time job market data"
+) 
