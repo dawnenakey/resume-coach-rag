@@ -50,15 +50,15 @@ flowchart TD
 ```mermaid
 gantt
     title Resume Processing Timeline
-    dateFormat s
+    dateFormat ss
     axisFormat %S
     section PDF Processing
-        Parse PDF     :0, 0.5s
-        Text Extraction:0.5s, 1s
+        Parse PDF        :0, 1
+        Text Extraction  :1, 2
     section Analysis
-        NLP Processing :1s, 2.68s
-        Bias Detection :2.68s, 3s
-        Keyword Analysis:3s, 3.5s
+        NLP Processing   :2, 4
+        Bias Detection   :4, 5
+        Keyword Analysis :5, 6
 ```
 
 ### Keyword Distribution
