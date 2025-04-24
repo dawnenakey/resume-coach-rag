@@ -18,13 +18,13 @@ paginate: true
 # Resume Coach RAG
 ## AI-Powered Resume Analysis and Job Market Insights
 
-![bg right:40%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/logo.png)
+![bg right:40%](../../static/images/logo.png)
 
 ---
 
 # Problem Statement
 
-![bg right:40% opacity:0.8](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/problem.png)
+![bg right:40% opacity:0.8](../../static/images/problem.png)
 
 - 🤖 Traditional resume screening lacks real-time market insights
 - 📝 Job seekers need data-driven career guidance
@@ -37,7 +37,7 @@ paginate: true
 
 # Solution Overview
 
-![bg left:40%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/research.png)
+![bg left:40%](../../static/images/research.png)
 
 ## Integrated AI Resume Analysis & Market Intelligence
 
@@ -51,7 +51,7 @@ paginate: true
 
 # Technical Architecture
 
-![bg right:60%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/architecture.png)
+![bg right:60%](../../static/images/architecture.png)
 
 - 🚀 Streamlit Frontend
 - 🧠 RAG-powered Analysis
@@ -62,7 +62,7 @@ paginate: true
 
 # Enhanced Features
 
-![Processing Pipeline width:800px](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/pipeline.png)
+![Processing Pipeline width:800px](../../static/images/pipeline.png)
 
 1. 📄 Smart Document Processing
 2. 📊 Market Demand Analysis
@@ -74,7 +74,7 @@ paginate: true
 
 # Performance & Scalability
 
-![bg right:40%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/results.png)
+![bg right:40%](../../static/images/results.png)
 
 ## System Metrics:
 - ⚡ Processing Speed: <2 seconds
@@ -86,7 +86,7 @@ paginate: true
 
 # Live Demo
 
-![width:900px](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/features.png)
+![width:900px](../../static/images/features.png)
 
 1. Resume Upload & Analysis
 2. Job Market Insights
@@ -97,7 +97,7 @@ paginate: true
 
 # Impact & Future Work
 
-![bg right:40%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/future.png)
+![bg right:40%](../../static/images/future.png)
 
 ## Current Impact:
 - 🎯 Data-driven career decisions
@@ -113,7 +113,7 @@ paginate: true
 
 # Thank You!
 
-![bg left:40%](https://raw.githubusercontent.com/dawnenakey/resume-coach-rag/main/static/images/contact.png)
+![bg left:40%](../../static/images/contact.png)
 
 ## Contact Information:
 - **Name:** Dawnena Key
