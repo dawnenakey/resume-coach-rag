@@ -48,19 +48,17 @@ flowchart TD
 
 ### Performance Analysis
 ```mermaid
-gantt
-    title Resume Processing Timeline
-    dateFormat X
-    axisFormat %s
-
-    section PDF Processing
-    Parse PDF        :0, 1s
-    Text Extraction  :1s, 2s
-
-    section Analysis
-    NLP Processing   :2s, 4s
-    Bias Detection   :4s, 5s
-    Keyword Analysis :5s, 6s
+sequenceDiagram
+    participant PDF as PDF Processing
+    participant Analysis as Analysis Pipeline
+    Note over PDF: Start
+    PDF->>PDF: Parse PDF (0.5s)
+    PDF->>PDF: Text Extraction (0.5s)
+    PDF->>Analysis: Send Text
+    Analysis->>Analysis: NLP Processing (1.68s)
+    Analysis->>Analysis: Bias Detection (0.32s)
+    Analysis->>Analysis: Keyword Analysis (0.5s)
+    Note over Analysis: Complete
 ```
 
 ### Keyword Distribution
