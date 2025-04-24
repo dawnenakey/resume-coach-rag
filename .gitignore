@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -23,6 +22,7 @@ wheels/
 
 # Virtual Environment
 venv/
+env/
 ENV/
 
 # IDE
@@ -36,6 +36,10 @@ uploads/
 .env
 *.log
 
+# OS specific
+.DS_Store
+Thumbs.db
+
 # Streamlit
 .streamlit/secrets.toml
 
@@ -44,9 +48,6 @@ uploads/
 
 # Sensitive data
 .env
-
-# System files
-.DS_Store
 
 # Data files
 data/
