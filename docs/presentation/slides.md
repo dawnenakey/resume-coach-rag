@@ -22,102 +22,95 @@ paginate: true
 
 ---
 
-# Problem Statement
+# The Problem
 
-![bg right:40% opacity:0.8](../../static/images/problem.png)
+- Job seekers struggle to tailor resumes
+- Manual tailoring is time-consuming
+- ATS systems filter resumes before human review
+- Many don't know how to improve keyword relevance
 
-- 🤖 Traditional resume screening lacks real-time market insights
-- 📝 Job seekers need data-driven career guidance
-- 🎯 Skills gap between resumes and market demands
-- 💼 Limited access to salary and demand analytics
-
-> *"70% of job seekers lack access to real-time market data for their skills"*
+![bg right:50%](../../static/images/problem-image.jpg)
 
 ---
 
-# Solution Overview
+# RAG Process
 
-![bg left:40%](../../static/images/research.png)
+01 Step 1 - User uploads resume and job description
 
-## Integrated AI Resume Analysis & Market Intelligence
+02 Step 4 - Resume enhanced with relevant keywords and tailored to job description
 
-### Features:
-1. 🎯 Real-time job market analysis
-2. 🔍 Location-based insights
-3. 💡 Salary analytics
-4. 📊 Skills demand tracking
+03 Step 2 - Resume and job description parsed into plain text
 
----
+04 Step 3 - Relevant skills, experience and keywords extracted from text
 
-# Technical Architecture
-
-![bg right:60%](../../static/images/architecture.png)
-
-- 🚀 Streamlit Frontend
-- 🧠 RAG-powered Analysis
-- ⚡ Real-time Adzuna API Integration
-- 🔒 Secure Multi-stage Docker Deployment
+![center](../../static/images/rag-process.png)
 
 ---
 
-# Enhanced Features
+# Tools & Stacks
 
-![Processing Pipeline width:800px](../../static/images/pipeline.png)
+Language/Frameworks | Libraries | Platform
+---|---|---
+Python | PyPDF2, docx2txt, | Streamlit for UI
+Streamlit (front end) | LangChain, FAISS | Docker deployment
 
-1. 📄 Smart Document Processing
-2. 📊 Market Demand Analysis
-3. 💰 Salary Insights
-4. 📍 Location-based Analytics
-5. 🔄 Trending Skills Detection
-
----
-
-# Performance & Scalability
-
-![bg right:40%](../../static/images/results.png)
-
-## System Metrics:
-- ⚡ Processing Speed: <2 seconds
-- 🔄 Real-time Market Updates
-- 📊 Multi-location Analysis
-- 🔒 Secure Data Handling
+Dev tools used: VS Code, GitHub, Docker
 
 ---
 
-# Live Demo
+# Implementation Details
 
-![width:900px](../../static/images/features.png)
+- Frontend: Streamlit UI
+- Backend: Python, RAG pipeline
+- Modeling: RAG pipeline (retrieval + LLM inference)
+- Parsing: PyPDF2 and docx2txt
+- Infrastructure: Docker with multi-stage builds
+- Version Control: GitHub
 
-1. Resume Upload & Analysis
-2. Job Market Insights
-3. Salary Analytics
-4. Skills Gap Analysis
+![bg right:40%](../../static/images/implementation.png)
 
 ---
 
-# Impact & Future Work
+# Data Ingestion & Parsing
+
+- Upload resumes in PDF/DOCX
+- Extract text using NLP parsers
+- Process through RAG pipeline
+- Output: Enhanced resume with market insights
+
+![bg right:40%](../../static/images/data-process.png)
+
+---
+
+# Market Analysis Features
+
+- Real-time job market analysis via Adzuna API
+- Location-based salary insights
+- Skills demand tracking
+- Industry trends analysis
+- Company hiring patterns
+
+![bg right:40%](../../static/images/market-analysis.png)
+
+---
+
+# Future Enhancements
+
+- Predictive career pathing
+- Custom industry analytics
+- Global market expansion
+- Advanced skills matching
+- Interview preparation assistance
 
 ![bg right:40%](../../static/images/future.png)
-
-## Current Impact:
-- 🎯 Data-driven career decisions
-- 📈 Real-time market insights
-- 💰 Salary optimization
-
-## Future Enhancements:
-- 🌟 Predictive career pathing
-- 🔄 Custom industry analytics
-- 🌍 Global market expansion
 
 ---
 
 # Thank You!
 
-![bg left:40%](../../static/images/contact.png)
-
-## Contact Information:
+## Contact Information
 - **Name:** Dawnena Key
 - **Email:** dawnena.key@du.edu
 - **GitHub:** [@dawnenakey](https://github.com/dawnenakey/resume-coach-rag)
 
-### Questions? 
+![bg left:40%](../../static/images/contact.png) 
