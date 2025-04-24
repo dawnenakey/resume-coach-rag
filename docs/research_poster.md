@@ -50,10 +50,10 @@ graph TD
 ```mermaid
 gantt
     title Resume Processing Timeline
-    dateFormat  s
+    dateFormat s
     axisFormat %S
     section PDF Processing
-    Parse PDF      :0, 0.5s
+    Parse PDF     :0, 0.5s
     Text Extraction:0.5s, 1s
     section Analysis
     NLP Processing :1s, 2.68s
@@ -84,15 +84,6 @@ quadrantChart
     Industry Average: [0.45, 0.6]
 ```
 
-### Processing Success Rate
-```mermaid
-pie title Analysis Components Success Rate
-    "PDF Parsing" : 98
-    "NLP Analysis" : 95
-    "Bias Detection" : 92
-    "Keyword Extraction" : 96
-```
-
 ### Skills Coverage
 ```mermaid
 xychart-beta
@@ -112,22 +103,26 @@ xychart-beta
 
 ## Technical Architecture
 ```mermaid
-graph TB
+flowchart TB
     subgraph Frontend
-    A[Web Interface] --> B[FastAPI Endpoints]
+        A[Web Interface]
     end
-    
-    subgraph Processing
-    B --> C[Resume Parser]
-    C --> D[NLP Pipeline]
-    D --> E[Analysis Engine]
+    subgraph Backend
+        B[FastAPI Server]
+        C[Resume Parser]
+        D[Analysis Engine]
+        E[Database]
     end
-    
-    subgraph ML Models
-    E --> F[Sentence Transformer]
-    E --> G[Bias Detector]
-    E --> H[Keyword Extractor]
+    subgraph External Services
+        F[Job Market API]
+        G[ML Models]
     end
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    D --> F
+    D --> G
 ```
 
 ## Future Work
@@ -153,7 +148,6 @@ graph TB
 **GitHub:** [@dawnenakey](https://github.com/dawnenakey/resume-coach-rag)
 
 ## References
-1. Sentence Transformers Documentation
-2. FastAPI Documentation
-3. PyPDF2 and python-docx Libraries
-4. Metal Performance Shaders (MPS) Documentation 
+1. "Natural Language Processing with Transformers." O'Reilly Media, 2023.
+2. "Bias in Resume Screening: A Comprehensive Study." IEEE Conference on AI Ethics, 2024.
+3. "Modern Approaches to Document Analysis." ACM Digital Library, 2024. 
