@@ -52,13 +52,20 @@ gantt
     title Resume Processing Timeline
     dateFormat ss
     axisFormat %S
+
     section PDF Processing
-        Parse PDF        :0, 1
-        Text Extraction  :1, 2
+    Parse PDF        :active, pdf1, 0, 1
+    Text Extraction  :active, text1, 1, 2
+
     section Analysis
-        NLP Processing   :2, 4
-        Bias Detection   :4, 5
-        Keyword Analysis :5, 6
+    NLP Processing   :done, nlp1, 2, 4
+    Bias Detection   :crit, bias1, 4, 5
+    Keyword Analysis :crit, key1, 5, 6
+
+    %% Styling
+    classDef done fill:#0B6E4F
+    classDef active fill:#45B7D1
+    classDef crit fill:#FF6B6B
 ```
 
 ### Keyword Distribution
