@@ -54,18 +54,20 @@ gantt
     axisFormat %S
 
     section PDF Processing
-    Parse PDF        :active, pdf1, 0, 1
-    Text Extraction  :active, text1, 1, 2
+    Parse PDF        :a1, 0, 1
+    Text Extraction  :a2, after a1, 1
 
     section Analysis
-    NLP Processing   :done, nlp1, 2, 4
-    Bias Detection   :crit, bias1, 4, 5
-    Keyword Analysis :crit, key1, 5, 6
+    NLP Processing   :a3, after a2, 2
+    Bias Detection   :a4, after a3, 1
+    Keyword Analysis :a5, after a4, 1
 
-    %% Styling
-    classDef done fill:#0B6E4F
-    classDef active fill:#45B7D1
-    classDef crit fill:#FF6B6B
+    %% Add colors using standard Mermaid syntax
+    click a1 href "#" "Parse PDF"
+    click a2 href "#" "Text Extraction"
+    click a3 href "#" "NLP Processing"
+    click a4 href "#" "Bias Detection"
+    click a5 href "#" "Keyword Analysis"
 ```
 
 ### Keyword Distribution
