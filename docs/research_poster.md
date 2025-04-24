@@ -16,7 +16,7 @@ How can we leverage AI and NLP techniques to create an unbiased, efficient resum
 
 ### Data Processing Pipeline
 ```mermaid
-graph TD
+flowchart TD
     A[Resume Upload] --> B[Text Extraction]
     B --> C[Text Preprocessing]
     C --> D[Feature Extraction]
@@ -53,46 +53,50 @@ gantt
     dateFormat s
     axisFormat %S
     section PDF Processing
-    Parse PDF     :0, 0.5s
-    Text Extraction:0.5s, 1s
+        Parse PDF     :0, 0.5s
+        Text Extraction:0.5s, 1s
     section Analysis
-    NLP Processing :1s, 2.68s
-    Bias Detection :2.68s, 3s
-    Keyword Analysis:3s, 3.5s
+        NLP Processing :1s, 2.68s
+        Bias Detection :2.68s, 3s
+        Keyword Analysis:3s, 3.5s
 ```
 
 ### Keyword Distribution
 ```mermaid
-bar
+%%{init: {"chart": {"width": 500, "height": 300}}}%%
+pie
     title Technology Stack Analysis
-    x-axis [Cloud, API, Azure, Python, Leadership, AWS]
-    y-axis 0-12 Mentions
-    bar [12, 9, 8, 1, 1, 0]
+    "Cloud" : 12
+    "API" : 9
+    "Azure" : 8
+    "Python" : 1
+    "Leadership" : 1
+    "AWS" : 0
 ```
 
 ### Bias Analysis Matrix
 ```mermaid
 quadrantChart
     title Resume Bias Analysis
-    x-axis Low Bias 0 -> High Bias 1
-    y-axis Technical 0 -> Soft Skills 1
-    quadrant-1 Balanced Technical
-    quadrant-2 Biased Technical
-    quadrant-3 Balanced Soft Skills
-    quadrant-4 Biased Soft Skills
-    Your Resume: [0.15, 0.8]
-    Industry Average: [0.45, 0.6]
+    x-axis "Low Bias" --> "High Bias"
+    y-axis "Technical" --> "Soft Skills"
+    quadrant-1 "Balanced Technical"
+    quadrant-2 "Biased Technical"
+    quadrant-3 "Balanced Soft Skills"
+    quadrant-4 "Biased Soft Skills"
+    "Your Resume": [0.15, 0.8]
+    "Industry Average": [0.45, 0.6]
 ```
 
 ### Skills Coverage
 ```mermaid
+%%{init: {"chart": {"width": 500, "height": 300}}}%%
 xychart-beta
-    title Skills Coverage vs. Industry Standards
+    title "Skills Coverage vs. Industry Standards"
     x-axis ["Cloud", "Security", "DevOps", "API", "ML"]
-    y-axis 0 -> 100
+    y-axis 0 --> 100
     bar [90, 85, 80, 75, 20]
     line [70, 65, 75, 60, 55]
-    title "Your Skills vs. Industry Average"
 ```
 
 ## Impact
@@ -113,7 +117,7 @@ flowchart TB
         D[Analysis Engine]
         E[Database]
     end
-    subgraph External Services
+    subgraph External
         F[Job Market API]
         G[ML Models]
     end
