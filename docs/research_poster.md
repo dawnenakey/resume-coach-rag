@@ -50,24 +50,17 @@ flowchart TD
 ```mermaid
 gantt
     title Resume Processing Timeline
-    dateFormat ss
-    axisFormat %S
+    dateFormat X
+    axisFormat %s
 
     section PDF Processing
-    Parse PDF        :a1, 0, 1
-    Text Extraction  :a2, after a1, 1
+    Parse PDF        :0, 1s
+    Text Extraction  :1s, 2s
 
     section Analysis
-    NLP Processing   :a3, after a2, 2
-    Bias Detection   :a4, after a3, 1
-    Keyword Analysis :a5, after a4, 1
-
-    %% Add colors using standard Mermaid syntax
-    click a1 href "#" "Parse PDF"
-    click a2 href "#" "Text Extraction"
-    click a3 href "#" "NLP Processing"
-    click a4 href "#" "Bias Detection"
-    click a5 href "#" "Keyword Analysis"
+    NLP Processing   :2s, 4s
+    Bias Detection   :4s, 5s
+    Keyword Analysis :5s, 6s
 ```
 
 ### Keyword Distribution
