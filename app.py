@@ -92,11 +92,27 @@ if uploaded_file:
             # Process resume
             resume_text = parse_pdf_resume(str(temp_path)) if uploaded_file.name.endswith('.pdf') else parse_docx_resume(str(temp_path))
             scores = baseline_scores(resume_text)
-            keyword_freq = extract_keywords(resume_text)
+            keyword_analysis = extract_keywords(resume_text)
+            keyword_freq = keyword_analysis['frequency']
+            skill_categories = keyword_analysis['categories']
             
             # Get job market data
             with st.expander("Job Market Analysis", expanded=True):
                 st.subheader("Real-time Job Market Insights")
+                
+                # First show skill categories
+                st.subheader("Skills Analysis")
+                skill_col1, skill_col2 = st.columns(2)
+                
+                with skill_col1:
+                    st.write("Technical Skills")
+                    for skill in skill_categories['technical_skills']:
+                        st.markdown(f"✓ {skill}")
+                
+                with skill_col2:
+                    st.write("Soft Skills")
+                    for skill in skill_categories['soft_skills']:
+                        st.markdown(f"✓ {skill}")
                 
                 # Analyze market demand for detected skills
                 market_demand = adzuna.analyze_market_demand(
