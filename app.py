@@ -1,6 +1,4 @@
 import streamlit as st
-import nest_asyncio
-nest_asyncio.apply()
 import time
 from pathlib import Path
 import os
