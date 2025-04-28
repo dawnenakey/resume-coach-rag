@@ -2,6 +2,9 @@
 
 A Streamlit-powered application that analyzes resumes using RAG (Retrieval-Augmented Generation) technology to provide insights and improvement suggestions.
 
+## Live Demo
+Try the application here: [Resume Coach RAG](https://dawnenakey-resume-coach-rag-app-dpqt1l.streamlit.app/)
+
 ## Features
 
 - Resume analysis (PDF and DOCX support)
@@ -9,6 +12,7 @@ A Streamlit-powered application that analyzes resumes using RAG (Retrieval-Augme
 - Gender bias detection
 - Skills coverage visualization
 - Real-time feedback and suggestions
+- Job market analysis for major US cities (Denver, New York, Seattle, Austin, San Diego)
 
 ## Setup
 
@@ -25,9 +29,10 @@ streamlit run app.py
 ## Usage
 
 1. Upload your resume (PDF or DOCX format)
-2. Wait for the analysis to complete
-3. Review the insights and suggestions
-4. Use the feedback to improve your resume
+2. Select your target job market location
+3. Wait for the analysis to complete
+4. Review the insights and suggestions
+5. Use the feedback to improve your resume
 
 ## Technologies Used
 
@@ -35,12 +40,18 @@ streamlit run app.py
 - Plotly for data visualization
 - Sentence Transformers for text analysis
 - PyPDF2 and python-docx for document parsing
+- Adzuna API for job market data
 
 ## Project Overview
 An intelligent system that analyzes resumes using NLP and machine learning to:
 - Detect and reduce bias in resume screening
 - Provide quantitative matching against job descriptions
 - Generate actionable feedback for job seekers
+- Analyze job market trends in major US cities
+
+## Deployment
+The application is deployed on Streamlit Cloud and can be accessed at:
+https://dawnenakey-resume-coach-rag-app-dpqt1l.streamlit.app/
 
 ## Live Demo Results
 Here's a sample analysis of actual results:
