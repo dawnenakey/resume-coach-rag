@@ -1,4 +1,6 @@
 import streamlit as st
+import nest_asyncio
+nest_asyncio.apply()
 import time
 from pathlib import Path
 import os
@@ -95,7 +97,7 @@ if uploaded_file:
             keyword_freq = extract_keywords(resume_text)
             
             # Get job market data
-            with st.expander("📊 Job Market Analysis", expanded=True):
+            with st.expander("Job Market Analysis", expanded=True):
                 st.subheader("Real-time Job Market Insights")
                 
                 # Analyze market demand for detected skills
@@ -128,7 +130,7 @@ if uploaded_file:
                         salary_insights = data.get('salary_insights', {})
                         if salary_insights:
                             st.markdown(f"**{skill}**")
-                            st.markdown(f"💰 Median: ${salary_insights.get('median', 0):,.2f}")
+                            st.markdown(f"Median: ${salary_insights.get('median', 0):,.2f}")
                             st.markdown(f"Range: ${salary_insights.get('p25', 0):,.2f} - ${salary_insights.get('p75', 0):,.2f}")
                 
                 with market_col3:

@@ -8,8 +8,10 @@ pandas==2.0.0
 python-dotenv==1.0.0
 watchdog==3.0.0
 requests==2.31.0
-torch==2.0.1
+torch==1.13.1
 transformers==4.30.2
+asyncio==3.4.3
+nest-asyncio==1.5.8
 
 # FastAPI and dependencies
 aiofiles==24.0.0
