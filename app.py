@@ -64,7 +64,7 @@ and provide actionable insights based on real job market data.
 """)
 
 # Location selector
-locations = ["New York", "San Francisco", "Chicago", "Austin", "Seattle"]
+locations = ["Denver", "New York", "Seattle", "Austin", "San Diego"]
 selected_location = st.selectbox("Select Job Market Location", locations)
 
 # File uploader with custom styling
@@ -189,6 +189,24 @@ if uploaded_file:
                     label="Skills Match",
                     value=f"{similarity_score:.1%}",
                     delta="vs. Job Requirements"
+                )
+            
+            # Add baseline scores section
+            st.subheader("Language Style Analysis")
+            style_col1, style_col2 = st.columns(2)
+            
+            with style_col1:
+                st.metric(
+                    label="Femininity Score",
+                    value=f"{scores.get('femininity_score', 0):.2%}",
+                    delta="Based on language patterns"
+                )
+            
+            with style_col2:
+                st.metric(
+                    label="Masculinity Score",
+                    value=f"{scores.get('masculinity_score', 0):.2%}",
+                    delta="Based on language patterns"
                 )
         
     except Exception as e:
