@@ -1,238 +1,106 @@
 # Resume Coach RAG
 
-A Streamlit-powered application that analyzes resumes using RAG (Retrieval-Augmented Generation) technology to provide insights and improvement suggestions.
-
-## Live Demo
-Try the application here: [Resume Coach RAG](https://dawnenakey-resume-coach-rag-app-dpqt1l.streamlit.app/)
+A Streamlit application that uses RAG (Retrieval-Augmented Generation) technology to analyze resumes and provide real-time job market insights. The application matches resume content against current job requirements and provides actionable insights based on real job market data.
 
 ## Features
 
-- Resume analysis (PDF and DOCX support)
-- Technology stack analysis
-- Gender bias detection
-- Skills coverage visualization
-- Real-time feedback and suggestions
-- Job market analysis for major US cities (Denver, New York, Seattle, Austin, San Diego)
+- Resume parsing support for PDF and DOCX formats
+- Real-time job market analysis using Adzuna API
+- Semantic similarity matching between resume content and job requirements
+- Location-based job market insights
+- Technical and soft skills analysis
+- File size limit of 200MB per upload
 
-## Setup
+## Technology Stack
 
-1. Install dependencies:
+- Python 3.10
+- Streamlit for the web interface
+- Sentence Transformers for semantic analysis
+- PyPDF2 and docx2txt for document parsing
+- Adzuna API for real-time job market data
+
+## Local Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/dawnenakey/resume-coach-rag.git
+cd resume-coach-rag
+```
+
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Run the application:
+3. Create a `.streamlit/secrets.toml` file with your Adzuna API credentials:
+```toml
+ADZUNA_APP_ID = "your_app_id"
+ADZUNA_API_KEY = "your_api_key"
+```
+
+4. Run the application:
 ```bash
 streamlit run app.py
 ```
 
-## Usage
-
-1. Upload your resume (PDF or DOCX format)
-2. Select your target job market location
-3. Wait for the analysis to complete
-4. Review the insights and suggestions
-5. Use the feedback to improve your resume
-
-## Technologies Used
-
-- Streamlit for the web interface
-- Plotly for data visualization
-- Sentence Transformers for text analysis
-- PyPDF2 and python-docx for document parsing
-- Adzuna API for job market data
-
-## Project Overview
-An intelligent system that analyzes resumes using NLP and machine learning to:
-- Detect and reduce bias in resume screening
-- Provide quantitative matching against job descriptions
-- Generate actionable feedback for job seekers
-- Analyze job market trends in major US cities
-
 ## Deployment
-The application is deployed on Streamlit Cloud and can be accessed at:
-https://dawnenakey-resume-coach-rag-app-dpqt1l.streamlit.app/
 
-## Live Demo Results
-Here's a sample analysis of actual results:
+The application can be deployed using either Railway.app or Render.com.
 
-### Keyword Analysis
-```
-Cloud Technologies: ██████████████ (12 mentions)
-API Development:    █████████ (9 mentions)
-Azure Platform:     ████████ (8 mentions)
-Python:            █ (1 mention)
-Leadership:        █ (1 mention)
-AWS:              ░ (0 mentions)
-```
+### Deploying on Render.com
 
-### Bias Detection
-```
-Femininity Score:  0.0901 [▓░░░░░░░░░] 9.01%
-Masculinity Score: 0.1175 [▓░░░░░░░░░] 11.75%
-Balance Score:     0.9725 [█████████▓] 97.25%
-```
+1. The repository includes a `render.yaml` configuration file for easy deployment
+2. Connect your GitHub repository to Render.com
+3. Create a new Web Service pointing to this repository
+4. Render will automatically:
+   - Use Python 3.10.12
+   - Install dependencies from requirements.txt
+   - Set up environment variables
+   - Start the Streamlit application
 
-### Performance Metrics
-- Processing Time: 2.68s
-- Success Rate: 92%
-- GPU Acceleration: MPS (Metal Performance Shaders)
+### Deploying on Railway.app
 
-## Key Features
-- PDF and DOCX resume parsing
-- Gender bias detection
-- Keyword frequency analysis
-- Job description similarity scoring
-- Real-time analysis with GPU acceleration
+1. Connect your GitHub repository to Railway.app
+2. Set up environment variables:
+   - `ADZUNA_APP_ID`
+   - `ADZUNA_API_KEY`
+3. The repository includes:
+   - `Dockerfile` for containerized deployment
+   - `Procfile` for process management
+   - `.dockerignore` for optimized builds
 
-## Technical Architecture
-- **Backend**: FastAPI
-- **ML Models**: Sentence Transformers
-- **Processing**: PyPDF2, python-docx
-- **Testing**: pytest
-- **CI/CD**: GitHub Actions
-- **Acceleration**: Metal Performance Shaders (MPS)
+## Environment Variables
 
-## Installation
+The following environment variables are required:
 
-### Prerequisites
-- Python 3.9+
-- pip
-- Virtual environment (recommended)
-- Mac with Apple Silicon (for MPS acceleration) or CPU-only mode
+- `ADZUNA_APP_ID`: Your Adzuna API application ID
+- `ADZUNA_API_KEY`: Your Adzuna API key
 
-### Setup
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/resume-analysis-system.git
-cd resume-analysis-system
-```
+## Project Structure
 
-2. Create and activate virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+- `app.py`: Main Streamlit application
+- `src/resume_parser.py`: Resume parsing functionality
+- `src/semantic_baseline.py`: Semantic analysis implementation
+- `.streamlit/config.toml`: Streamlit configuration
+- `requirements.txt`: Python dependencies
+- `Dockerfile`: Container configuration
+- `render.yaml`: Render.com configuration
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## Security
 
-### Running the Application
-
-1. Start the server:
-```bash
-./run.py --reload
-```
-
-2. Access the web interface:
-- Open http://127.0.0.1:8000 in your browser
-- Upload a resume (PDF/DOCX)
-- View analysis results
-
-## Development
-
-### Project Structure
-```
-resume-analysis-system/
-├── src/                    # Source code
-│   ├── api.py             # FastAPI application
-│   ├── resume_parser.py   # Resume parsing logic
-│   └── semantic_baseline.py# Analysis models
-├── tests/                  # Test suite
-├── docs/                   # Documentation
-├── uploads/               # Temporary file storage
-├── requirements.txt       # Dependencies
-├── run.py                # Application runner
-└── Dockerfile            # Container definition
-```
-
-### Running Tests
-```bash
-pytest
-```
-
-### Code Style
-- Black for formatting
-- isort for import sorting
-- flake8 for linting
-
-## API Documentation
-
-### Endpoints
-
-#### POST /upload_resume/
-Upload and analyze a resume:
-```python
-response = await client.post(
-    "/upload_resume/",
-    files={"file": ("resume.pdf", file_content)}
-)
-```
-
-Response:
-```json
-{
-    "resume_text": "...",
-    "scores": {
-        "femininity_score": 0.0901,
-        "masculinity_score": 0.1175
-    },
-    "keyword_freq": {
-        "python": 1,
-        "cloud": 12,
-        "api": 9
-    },
-    "similarity_score": 0.50
-}
-```
-
-## Performance
-
-### Processing Speed
-- Average analysis time: 2.68s per resume
-- GPU-accelerated inference using MPS
-- 92% successful analysis rate
-
-### Resource Usage
-- Memory: ~500MB baseline
-- GPU: Optimized for Apple Silicon
-- Storage: Temporary file cleanup
-
-## Future Improvements
-1. Enhanced Analysis
-   - Industry-specific scoring
-   - Role-based recommendations
-   - Skills gap analysis
-
-2. Technical Improvements
-   - Support for more file formats
-   - Improved PDF parsing
-   - Real-time analysis
-   - API rate limiting
-
-3. ML Enhancements
-   - Custom model training
-   - Multi-language support
-   - Enhanced bias detection
+- API credentials are stored securely as environment variables
+- CORS and XSRF protection enabled
+- File upload restrictions in place
+- Sensitive files excluded via .gitignore and .dockerignore
 
 ## Contributing
+
 1. Fork the repository
 2. Create a feature branch
-3. Commit changes
+3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
 
 ## License
-MIT License
 
-## Author
-**Dawnena Key**
-- Email: dawnena.key@du.edu
-- GitHub: [@dawnenakey](https://github.com/dawnenakey/resume-coach-rag)
-
-## Acknowledgments
-- Sentence Transformers team
-- FastAPI community
-- PyPDF2 maintainers
+This project is licensed under the MIT License - see the LICENSE file for details.
