@@ -1,1 +1,1 @@
-web: python start.py 
+web: docker run --rm -p $PORT:8501 $(docker build -q .) 
