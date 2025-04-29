@@ -1,10 +1,11 @@
 import streamlit as st
 from src.resume_parser import parse_resume
-from src.semantic_baseline import compute_similarity, extract_keywords
+from src.semantic_baseline import compute_similarity, extract_keywords, baseline_scores
 from src.adzuna_api import AdzunaAPI
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import numpy as np
 
 # Initialize models and APIs
 @st.cache_resource
@@ -19,7 +20,7 @@ st.title("Resume Coach - Job Market Analysis")
 st.write("Get insights about your skills and the job market by uploading your resume.")
 
 # Define cities at the top level
-cities = ["New York", "San Francisco", "Chicago", "Austin", "Seattle"]
+cities = ["New York", "San Francisco", "Chicago", "Austin", "Seattle", "Denver"]
 selected_city = st.selectbox("Select a city for job market analysis", cities)
 
 # File upload
@@ -33,6 +34,35 @@ if uploaded_file:
         # Create an expander for resume text
         with st.expander("View Parsed Resume Text"):
             st.write(resume_text)
+
+        # Gender Analysis
+        st.write("### Language Style Analysis")
+        scores = baseline_scores(resume_text)
+        
+        # Create columns for scores
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            fem_score = round(scores["femininity_score"] * 100, 2)
+            st.metric("Collaborative/Supportive Language", f"{fem_score}%")
+            
+        with col2:
+            masc_score = round(scores["masculinity_score"] * 100, 2)
+            st.metric("Assertive/Independent Language", f"{masc_score}%")
+            
+        with col3:
+            # Calculate neutral score as the complement of the other two
+            neutral_score = round(100 - fem_score - masc_score, 2)
+            st.metric("Neutral/Balanced Language", f"{neutral_score}%")
+        
+        # Visualization of language distribution
+        fig = go.Figure(data=[
+            go.Bar(name='Language Style Distribution',
+                  x=['Collaborative', 'Assertive', 'Neutral'],
+                  y=[fem_score, masc_score, neutral_score])
+        ])
+        fig.update_layout(title='Language Style Distribution in Resume')
+        st.plotly_chart(fig)
 
         # Extract keywords from resume
         keywords_data = extract_keywords(resume_text)
@@ -61,7 +91,7 @@ if uploaded_file:
         skills_list = technical_skills + soft_skills
 
         with st.spinner('Analyzing job market data...'):
-            market_data = resources['adzuna'].analyze_market_demand(skills_list, cities)
+            market_data = resources['adzuna'].analyze_market_demand(skills_list, [selected_city])
 
             # Create market insights visualization
             market_insights = []
@@ -77,13 +107,11 @@ if uploaded_file:
             
             # Plot job distribution
             if not df_market.empty:
-                st.write("### Job Distribution by Skill and City")
+                st.write("### Job Distribution by Skill")
                 fig = px.bar(df_market, 
                             x='Skill', 
                             y='Job Count',
-                            color='City',
-                            title='Number of Job Postings by Skill and City',
-                            barmode='group')
+                            title=f'Number of Job Postings by Skill in {selected_city}')
                 st.plotly_chart(fig)
             else:
                 st.warning("No job distribution data available for the selected skills.")
@@ -116,7 +144,7 @@ if uploaded_file:
                 top_companies = []
                 
                 for skill in skills_list[:3]:  # Analyze top 3 skills
-                    companies = resources['adzuna'].get_top_companies(skill, selected_city)
+                    companies = resources['adzuna'].get_top_companies(skill, where=selected_city)
                     for company in companies:
                         company['skill'] = skill
                         top_companies.append(company)
@@ -137,32 +165,38 @@ if uploaded_file:
 
             # Salary insights
             st.write("### Salary Insights")
-            salary_data = []
-            for skill, data in market_data.items():
-                if 'salary_insights' in data and data['salary_insights']:
-                    salary_data.append({
-                        'Skill': skill,
-                        'Median Salary': data['salary_insights']['median'],
-                        'P25': data['salary_insights']['p25'],
-                        'P75': data['salary_insights']['p75']
-                    })
+            with st.spinner('Analyzing salary data...'):
+                salary_data = []
+                for skill in skills_list[:3]:  # Analyze top 3 skills
+                    salary_info = resources['adzuna'].get_salary_insights(skill, where=selected_city)
+                    if salary_info:
+                        salary_data.append({
+                            'Skill': skill,
+                            'Median': salary_info.get('median', 0),
+                            'Min': salary_info.get('min', 0),
+                            'Max': salary_info.get('max', 0)
+                        })
 
-            if salary_data:
-                salary_df = pd.DataFrame(salary_data)
-                fig = go.Figure()
-                for skill in salary_df['Skill']:
-                    skill_data = salary_df[salary_df['Skill'] == skill]
-                    fig.add_trace(go.Box(
-                        name=skill,
-                        y=[skill_data['P25'].iloc[0], 
-                           skill_data['Median Salary'].iloc[0], 
-                           skill_data['P75'].iloc[0]],
-                        boxpoints=False
-                    ))
-                fig.update_layout(title=f'Salary Distribution by Skill in {selected_city}',
-                                yaxis_title='Annual Salary ($)')
-                st.plotly_chart(fig)
-            else:
-                st.warning("No salary data available for the selected skills.")
+                if salary_data:
+                    salary_df = pd.DataFrame(salary_data)
+                    fig = go.Figure()
+                    for skill in salary_df['Skill']:
+                        skill_data = salary_df[salary_df['Skill'] == skill]
+                        fig.add_trace(go.Box(
+                            name=skill,
+                            y=[skill_data['Min'].iloc[0], 
+                               skill_data['Median'].iloc[0], 
+                               skill_data['Max'].iloc[0]],
+                            boxpoints=False
+                        ))
+                    fig.update_layout(title=f'Salary Distribution by Skill in {selected_city}',
+                                    yaxis_title='Annual Salary ($)')
+                    st.plotly_chart(fig)
+
+                    # Add a table view of salary data
+                    st.write("#### Detailed Salary Information")
+                    st.dataframe(salary_df)
+                else:
+                    st.warning("No salary data available for the selected skills.")
 else:
     st.info("👆 Please upload your resume to get started with the analysis.")
