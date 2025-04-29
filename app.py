@@ -16,39 +16,49 @@ def init_resources():
 resources = init_resources()
 
 st.title("Resume Coach - Job Market Analysis")
-st.write("Upload your resume to get insights about your skills and the job market.")
+st.write("Get insights about your skills and the job market by uploading your resume.")
+
+# Define cities at the top level
+cities = ["New York", "San Francisco", "Chicago", "Austin", "Seattle"]
+selected_city = st.selectbox("Select a city for job market analysis", cities)
 
 # File upload
-uploaded_file = st.file_uploader("Choose your resume file", type=["pdf", "docx", "txt"])
+uploaded_file = st.file_uploader("Upload your resume (PDF or DOCX)", type=["pdf", "docx"])
 
 if uploaded_file:
-    with st.spinner('Parsing your resume...'):
+    with st.spinner('Analyzing your resume...'):
+        # Parse resume
         resume_text = parse_resume(uploaded_file)
-        st.write("### Your Resume Text")
-        st.write(resume_text)
+        
+        # Create an expander for resume text
+        with st.expander("View Parsed Resume Text"):
+            st.write(resume_text)
 
         # Extract keywords from resume
         keywords_data = extract_keywords(resume_text)
-        
-        st.write("### Skills Found in Your Resume")
         
         # Create separate DataFrames for technical and soft skills
         technical_skills = keywords_data["categories"]["technical_skills"]
         soft_skills = keywords_data["categories"]["soft_skills"]
         
-        # Display both skill categories
-        st.write("#### Technical Skills")
-        tech_df = pd.DataFrame({"Skill": technical_skills})
-        st.dataframe(tech_df)
+        # Display skills in columns
+        col1, col2 = st.columns(2)
         
-        st.write("#### Soft Skills")
-        soft_df = pd.DataFrame({"Skill": soft_skills})
-        st.dataframe(soft_df)
+        with col1:
+            st.write("### Technical Skills")
+            tech_df = pd.DataFrame({"Skill": technical_skills})
+            st.dataframe(tech_df, height=300)
+        
+        with col2:
+            st.write("### Soft Skills")
+            soft_df = pd.DataFrame({"Skill": soft_skills})
+            st.dataframe(soft_df, height=300)
 
         # Market Analysis
-        st.write("### Job Market Analysis")
-        cities = ["New York", "San Francisco", "Chicago", "Austin", "Seattle"]
-        skills_list = technical_skills + soft_skills  # Use both technical and soft skills for analysis
+        st.write("## Job Market Analysis")
+        st.write(f"Analyzing job market in {selected_city} for your skills")
+        
+        skills_list = technical_skills + soft_skills
 
         with st.spinner('Analyzing job market data...'):
             market_data = resources['adzuna'].analyze_market_demand(skills_list, cities)
@@ -66,13 +76,17 @@ if uploaded_file:
             df_market = pd.DataFrame(market_insights)
             
             # Plot job distribution
-            fig = px.bar(df_market, 
-                        x='Skill', 
-                        y='Job Count',
-                        color='City',
-                        title='Job Distribution by Skill and City',
-                        barmode='group')
-            st.plotly_chart(fig)
+            if not df_market.empty:
+                st.write("### Job Distribution by Skill and City")
+                fig = px.bar(df_market, 
+                            x='Skill', 
+                            y='Job Count',
+                            color='City',
+                            title='Number of Job Postings by Skill and City',
+                            barmode='group')
+                st.plotly_chart(fig)
+            else:
+                st.warning("No job distribution data available for the selected skills.")
 
             # Get trending skills
             st.write("### Trending Related Skills")
@@ -93,11 +107,12 @@ if uploaded_file:
                                 y='mentions',
                                 title='Top 10 Trending Related Skills')
                     st.plotly_chart(fig)
+                else:
+                    st.warning("No trending skills data available at the moment.")
 
             # Get top companies
             st.write("### Top Companies Hiring")
-            with st.spinner('Finding top companies...'):
-                selected_city = st.selectbox("Select a city", cities)
+            with st.spinner(f'Finding top companies in {selected_city}...'):
                 top_companies = []
                 
                 for skill in skills_list[:3]:  # Analyze top 3 skills
@@ -117,6 +132,8 @@ if uploaded_file:
                                 title=f'Top Companies Hiring in {selected_city}')
                     fig.update_layout(xaxis_tickangle=45)
                     st.plotly_chart(fig)
+                else:
+                    st.warning(f"No company data available for {selected_city} at the moment.")
 
             # Salary insights
             st.write("### Salary Insights")
@@ -142,8 +159,10 @@ if uploaded_file:
                            skill_data['P75'].iloc[0]],
                         boxpoints=False
                     ))
-                fig.update_layout(title='Salary Distribution by Skill',
+                fig.update_layout(title=f'Salary Distribution by Skill in {selected_city}',
                                 yaxis_title='Annual Salary ($)')
                 st.plotly_chart(fig)
+            else:
+                st.warning("No salary data available for the selected skills.")
 else:
-    st.info("Please upload a resume file to get started.")
+    st.info("👆 Please upload your resume to get started with the analysis.")
