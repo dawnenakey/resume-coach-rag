@@ -133,28 +133,39 @@ if uploaded_file:
         skills_list = technical_skills + soft_skills
 
         with st.spinner('Analyzing job market data...'):
-            market_data = resources['adzuna'].analyze_market_demand(skills_list, [selected_city])
-
-            # Create market insights visualization
-            market_insights = []
-            for skill, data in market_data.items():
-                for city, city_data in data['by_location'].items():
-                    market_insights.append({
+            # Get job counts for each skill
+            job_counts = []
+            for skill in skills_list:
+                try:
+                    # Search jobs directly for the selected city
+                    jobs_data = resources['adzuna'].search_jobs(skill, where=selected_city)
+                    count = jobs_data.get('count', 0)
+                    job_counts.append({
                         'Skill': skill,
-                        'City': city,
-                        'Job Count': city_data['job_count']
+                        'Job Count': count
                     })
+                except Exception as e:
+                    st.error(f"Error fetching data for {skill}: {str(e)}")
+                    continue
 
-            df_market = pd.DataFrame(market_insights)
-            
-            # Plot job distribution
-            if not df_market.empty:
+            if job_counts:
+                df_market = pd.DataFrame(job_counts)
+                
+                # Sort by job count descending
+                df_market = df_market.sort_values('Job Count', ascending=False)
+                
+                # Plot job distribution
                 st.write("### Job Distribution by Skill")
                 fig = px.bar(df_market, 
                             x='Skill', 
                             y='Job Count',
                             title=f'Number of Job Postings by Skill in {selected_city}')
+                fig.update_layout(xaxis_tickangle=45)
                 st.plotly_chart(fig)
+
+                # Show the data in a table
+                st.write("#### Detailed Job Counts")
+                st.dataframe(df_market)
             else:
                 st.warning("No job distribution data available for the selected skills.")
 
