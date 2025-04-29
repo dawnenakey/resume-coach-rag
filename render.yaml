@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: resume-coach-rag
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
+      - key: ADZUNA_APP_ID
+        value: dd78fa64
+      - key: ADZUNA_API_KEY
+        value: 5884a0e76f0eaa7c69202ce052fdf10f 
