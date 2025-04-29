@@ -1,6 +1,6 @@
 import streamlit as st
 from src.resume_parser import parse_resume
-from src.semantic_baseline import compute_similarity, extract_keywords, load_model, load_spacy
+from src.semantic_baseline import compute_similarity, extract_keywords
 from src.adzuna_api import AdzunaAPI
 import pandas as pd
 import plotly.express as px
@@ -10,9 +10,7 @@ import plotly.graph_objects as go
 @st.cache_resource
 def init_resources():
     return {
-        'adzuna': AdzunaAPI(),
-        'transformer_model': load_model(),
-        'spacy_model': load_spacy()
+        'adzuna': AdzunaAPI()
     }
 
 resources = init_resources()
