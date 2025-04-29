@@ -2,12 +2,19 @@ services:
   - type: web
     name: resume-coach-rag
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: streamlit run app.py
+    buildCommand: pip install -r requirements-deploy.txt
+    startCommand: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.12
       - key: ADZUNA_APP_ID
         value: dd78fa64
       - key: ADZUNA_API_KEY
-        value: 5884a0e76f0eaa7c69202ce052fdf10f 
+        value: 5884a0e76f0eaa7c69202ce052fdf10f
+      - key: STREAMLIT_SERVER_PORT
+        value: 10000
+      - key: PORT
+        value: 10000
+    healthCheckPath: /_stcore/health
+    autoDeploy: true
+    plan: free 
