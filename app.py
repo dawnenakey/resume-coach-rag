@@ -133,19 +133,81 @@ if uploaded_file:
                         demand_data,
                         x='Skill',
                         y='Jobs Available',
-                        title=f'Job Demand in {selected_location}'
+                        title=f'Job Demand in {selected_location}',
+                        color='Jobs Available',
+                        color_continuous_scale='Viridis'
+                    )
+                    fig_demand.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font_color='#FFFFFF'
                     )
                     st.plotly_chart(fig_demand, use_container_width=True)
+
+                    # Add Skills Distribution Pie Chart
+                    skills_dist = {
+                        'Technical Skills': len(skill_categories['technical_skills']),
+                        'Soft Skills': len(skill_categories['soft_skills'])
+                    }
+                    fig_skills = px.pie(
+                        values=list(skills_dist.values()),
+                        names=list(skills_dist.keys()),
+                        title='Skills Distribution',
+                        color_discrete_sequence=['#0066FF', '#00CC99']
+                    )
+                    fig_skills.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font_color='#FFFFFF'
+                    )
+                    st.plotly_chart(fig_skills, use_container_width=True)
                 
                 with market_col2:
-                    # Salary insights
-                    st.subheader("Salary Insights")
+                    # Keyword Frequency Bar Chart
+                    top_keywords = dict(sorted(keyword_freq.items(), key=lambda x: x[1], reverse=True)[:10])
+                    fig_keywords = px.bar(
+                        x=list(top_keywords.keys()),
+                        y=list(top_keywords.values()),
+                        title='Top Keywords in Your Resume',
+                        labels={'x': 'Keyword', 'y': 'Frequency'},
+                        color=list(top_keywords.values()),
+                        color_continuous_scale='Viridis'
+                    )
+                    fig_keywords.update_layout(
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        font_color='#FFFFFF'
+                    )
+                    st.plotly_chart(fig_keywords, use_container_width=True)
+
+                    # Salary insights with visualization
+                    salary_data = []
                     for skill, data in market_demand.items():
                         salary_insights = data.get('salary_insights', {})
                         if salary_insights:
-                            st.markdown(f"**{skill}**")
-                            st.markdown(f"Median: ${salary_insights.get('median', 0):,.2f}")
-                            st.markdown(f"Range: ${salary_insights.get('p25', 0):,.2f} - ${salary_insights.get('p75', 0):,.2f}")
+                            salary_data.append({
+                                'Skill': skill,
+                                'Median Salary': salary_insights.get('median', 0),
+                                'Min': salary_insights.get('p25', 0),
+                                'Max': salary_insights.get('p75', 0)
+                            })
+                    
+                    if salary_data:
+                        df_salary = pd.DataFrame(salary_data)
+                        fig_salary = go.Figure()
+                        fig_salary.add_trace(go.Box(
+                            x=df_salary['Skill'],
+                            y=df_salary['Median Salary'],
+                            name='Salary Distribution',
+                            boxpoints='all'
+                        ))
+                        fig_salary.update_layout(
+                            title='Salary Distribution by Skill',
+                            plot_bgcolor='rgba(0,0,0,0)',
+                            paper_bgcolor='rgba(0,0,0,0)',
+                            font_color='#FFFFFF'
+                        )
+                        st.plotly_chart(fig_salary, use_container_width=True)
                 
                 with market_col3:
                     # Trending skills
