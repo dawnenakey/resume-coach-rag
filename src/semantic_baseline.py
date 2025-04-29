@@ -1,11 +1,10 @@
 # src/semantic_baseline.py
+import torch
 try:
     from sentence_transformers import SentenceTransformer, util
-except ImportError:
-    print("Installing required packages...")
-    import subprocess
-    subprocess.check_call(['pip', 'install', 'sentence-transformers'])
-    from sentence_transformers import SentenceTransformer, util
+except ImportError as e:
+    print(f"Error importing sentence_transformers: {e}")
+    raise
 
 from collections import Counter
 import re
@@ -65,11 +64,19 @@ def compute_similarity(reference, text):
         return 0.0
         
     try:
+        # Convert inputs to lists if they're not already
+        if isinstance(reference, str):
+            reference = [reference]
+        if isinstance(text, str):
+            text = [text]
+            
+        # Encode with simpler parameters
         reference_embeddings = model.encode(reference, convert_to_tensor=True)
         text_embedding = model.encode(text, convert_to_tensor=True)
         
-        similarities = util.cos_sim(text_embedding, reference_embeddings)
-        average_score = similarities.mean().item()
+        # Compute similarity
+        similarities = util.pytorch_cos_sim(text_embedding, reference_embeddings)
+        average_score = float(torch.mean(similarities).item())
         return round(average_score, 4)
     except Exception as e:
         print(f"Error computing similarity: {str(e)}")
