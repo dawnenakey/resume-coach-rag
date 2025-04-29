@@ -35,7 +35,7 @@ if uploaded_file:
         with st.expander("View Parsed Resume Text"):
             st.write(resume_text)
 
-        # Gender Analysis
+        # Language Style Analysis
         st.write("### Language Style Analysis")
         scores = baseline_scores(resume_text)
         
@@ -51,7 +51,7 @@ if uploaded_file:
             st.metric("Assertive/Independent Language", f"{masc_score}%")
             
         with col3:
-            # Calculate neutral score as the complement of the other two
+            # Calculate neutral score as the complement
             neutral_score = round(100 - fem_score - masc_score, 2)
             st.metric("Neutral/Balanced Language", f"{neutral_score}%")
         
@@ -168,14 +168,18 @@ if uploaded_file:
             with st.spinner('Analyzing salary data...'):
                 salary_data = []
                 for skill in skills_list[:3]:  # Analyze top 3 skills
-                    salary_info = resources['adzuna'].get_salary_insights(skill, where=selected_city)
-                    if salary_info:
-                        salary_data.append({
-                            'Skill': skill,
-                            'Median': salary_info.get('median', 0),
-                            'Min': salary_info.get('min', 0),
-                            'Max': salary_info.get('max', 0)
-                        })
+                    try:
+                        salary_info = resources['adzuna'].get_salary_insights(skill)  # Removed where parameter
+                        if salary_info:
+                            salary_data.append({
+                                'Skill': skill,
+                                'Median': salary_info.get('avg', 0),  # Changed to use 'avg' instead of 'median'
+                                'Min': salary_info.get('min', 0),
+                                'Max': salary_info.get('max', 0)
+                            })
+                    except Exception as e:
+                        st.warning(f"Could not fetch salary data for {skill}")
+                        continue
 
                 if salary_data:
                     salary_df = pd.DataFrame(salary_data)
@@ -189,7 +193,7 @@ if uploaded_file:
                                skill_data['Max'].iloc[0]],
                             boxpoints=False
                         ))
-                    fig.update_layout(title=f'Salary Distribution by Skill in {selected_city}',
+                    fig.update_layout(title=f'Salary Distribution by Skill',
                                     yaxis_title='Annual Salary ($)')
                     st.plotly_chart(fig)
 
