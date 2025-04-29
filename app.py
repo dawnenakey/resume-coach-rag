@@ -35,34 +35,76 @@ if uploaded_file:
         with st.expander("View Parsed Resume Text"):
             st.write(resume_text)
 
-        # Language Style Analysis
-        st.write("### Language Style Analysis")
+        # Language Analysis Section
+        st.write("### Resume Language Analysis")
         scores = baseline_scores(resume_text)
         
-        # Create columns for scores
+        st.write("#### Gender Baseline Scores")
         col1, col2, col3 = st.columns(3)
         
         with col1:
             fem_score = round(scores["femininity_score"] * 100, 2)
-            st.metric("Collaborative/Supportive Language", f"{fem_score}%")
+            st.metric("Feminine Language", f"{fem_score}%", help="Words associated with empathy, collaboration, and support")
             
         with col2:
             masc_score = round(scores["masculinity_score"] * 100, 2)
-            st.metric("Assertive/Independent Language", f"{masc_score}%")
+            st.metric("Masculine Language", f"{masc_score}%", help="Words associated with assertiveness, independence, and leadership")
             
         with col3:
-            # Calculate neutral score as the complement
             neutral_score = round(100 - fem_score - masc_score, 2)
-            st.metric("Neutral/Balanced Language", f"{neutral_score}%")
-        
-        # Visualization of language distribution
+            st.metric("Neutral Language", f"{neutral_score}%", help="Balanced or gender-neutral language")
+
+        # Visualization of gender baseline distribution
         fig = go.Figure(data=[
-            go.Bar(name='Language Style Distribution',
-                  x=['Collaborative', 'Assertive', 'Neutral'],
-                  y=[fem_score, masc_score, neutral_score])
+            go.Bar(name='Gender Language Distribution',
+                  x=['Feminine', 'Masculine', 'Neutral'],
+                  y=[fem_score, masc_score, neutral_score],
+                  marker_color=['pink', 'blue', 'gray'])
         ])
-        fig.update_layout(title='Language Style Distribution in Resume')
+        fig.update_layout(title='Gender Language Distribution in Resume')
         st.plotly_chart(fig)
+
+        st.write("#### Professional Style Analysis")
+        col4, col5, col6 = st.columns(3)
+        
+        with col4:
+            collab_score = round(scores["femininity_score"] * 100, 2)
+            st.metric("Collaborative/Supportive", f"{collab_score}%", help="Language emphasizing teamwork and support")
+            
+        with col5:
+            assert_score = round(scores["masculinity_score"] * 100, 2)
+            st.metric("Assertive/Independent", f"{assert_score}%", help="Language emphasizing leadership and initiative")
+            
+        with col6:
+            balanced_score = round(100 - collab_score - assert_score, 2)
+            st.metric("Balanced/Neutral", f"{balanced_score}%", help="Professional, balanced language")
+
+        # Visualization of professional style distribution
+        fig2 = go.Figure(data=[
+            go.Bar(name='Professional Style Distribution',
+                  x=['Collaborative', 'Assertive', 'Balanced'],
+                  y=[collab_score, assert_score, balanced_score],
+                  marker_color=['green', 'orange', 'purple'])
+        ])
+        fig2.update_layout(title='Professional Language Style Distribution')
+        st.plotly_chart(fig2)
+
+        # Add interpretation
+        with st.expander("📊 Understanding Your Language Scores"):
+            st.write("""
+            #### Gender Baseline Analysis
+            - **Feminine Language**: Words and phrases traditionally associated with feminine traits (empathy, collaboration, nurturing)
+            - **Masculine Language**: Words and phrases traditionally associated with masculine traits (assertiveness, independence, leadership)
+            - **Neutral Language**: Gender-neutral or balanced language
+            
+            #### Professional Style Analysis
+            - **Collaborative/Supportive**: Emphasizes team skills, support roles, and interpersonal abilities
+            - **Assertive/Independent**: Highlights leadership, initiative, and autonomous achievements
+            - **Balanced/Neutral**: Professional language that balances both styles
+            
+            💡 **Tip**: A well-balanced resume often shows a mix of both collaborative and assertive language, 
+            tailored to the specific role you're targeting.
+            """)
 
         # Extract keywords from resume
         keywords_data = extract_keywords(resume_text)
