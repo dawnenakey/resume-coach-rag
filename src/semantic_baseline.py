@@ -1,24 +1,53 @@
 # src/semantic_baseline.py
 import torch
-try:
-    from sentence_transformers import SentenceTransformer, util
-except ImportError as e:
-    print(f"Error importing sentence_transformers: {e}")
-    raise
-
+import streamlit as st
+from sentence_transformers import SentenceTransformer, util
+import numpy as np
 from collections import Counter
 import re
+from typing import Dict, List, Any
+import spacy
 
-# Load the model with error handling
-try:
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-except Exception as e:
-    print(f"Error loading model: {str(e)}")
-    model = None
+@st.cache_resource
+def load_model():
+    """Load and cache the sentence transformer model"""
+    try:
+        return SentenceTransformer('all-MiniLM-L6-v2')
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
+        return None
+
+@st.cache_resource
+def load_spacy():
+    """Load and cache the spaCy model"""
+    try:
+        return spacy.load("en_core_web_sm")
+    except Exception as e:
+        st.error(f"Error loading spaCy model: {str(e)}")
+        return None
 
 # Define sample phrases that represent the baseline traits
-femininity_phrases = ["compassionate", "collaborative", "nurturing", "empathetic", "supportive"]
-masculinity_phrases = ["assertive", "independent", "competitive", "strong", "logical"]
+femininity_phrases = [
+    # Collaborative traits
+    "compassionate", "collaborative", "nurturing", "empathetic", "supportive",
+    # Communication traits
+    "communicative", "listening", "interpersonal", "relationship-building",
+    # Team-oriented traits
+    "team-player", "cooperative", "helpful", "mentoring", "facilitating",
+    # Emotional Intelligence
+    "emotional intelligence", "empathy", "understanding", "patient", "caring"
+]
+
+masculinity_phrases = [
+    # Leadership traits
+    "assertive", "independent", "competitive", "strong", "logical",
+    # Action-oriented traits
+    "driven", "ambitious", "decisive", "direct", "results-oriented",
+    # Technical traits
+    "analytical", "strategic", "technical", "systematic",
+    # Achievement traits
+    "achieved", "led", "executed", "implemented", "delivered"
+]
 
 # Expanded keyword lists
 technical_keywords = [
@@ -56,53 +85,77 @@ soft_skills_keywords = [
 # Combine all keywords
 default_keywords = technical_keywords + soft_skills_keywords
 
-def compute_similarity(reference, text):
+def compute_similarity(text1: str, text2: str) -> float:
     """
-    Compute average similarity between a list of reference traits and a resume text.
+    Compute semantic similarity between two texts using cached model
     """
-    if model is None:
+    model = load_model()
+    if not model:
         return 0.0
-        
+    
     try:
-        # Convert inputs to lists if they're not already
-        if isinstance(reference, str):
-            reference = [reference]
-        if isinstance(text, str):
-            text = [text]
-            
-        # Encode with simpler parameters
-        reference_embeddings = model.encode(reference, convert_to_tensor=True)
-        text_embedding = model.encode(text, convert_to_tensor=True)
+        # Encode the texts
+        embedding1 = model.encode(text1, convert_to_tensor=True)
+        embedding2 = model.encode(text2, convert_to_tensor=True)
         
-        # Compute similarity
-        similarities = util.pytorch_cos_sim(text_embedding, reference_embeddings)
-        average_score = float(torch.mean(similarities).item())
-        return round(average_score, 4)
+        # Compute cosine similarity
+        similarity = np.dot(embedding1, embedding2) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
+        return float(similarity)
     except Exception as e:
-        print(f"Error computing similarity: {str(e)}")
+        st.error(f"Error computing similarity: {str(e)}")
         return 0.0
 
 def baseline_scores(resume_text):
-    fem_score = compute_similarity(femininity_phrases, resume_text)
-    masc_score = compute_similarity(masculinity_phrases, resume_text)
+    """
+    Calculate gender baseline scores with improved normalization.
+    
+    Args:
+        resume_text (str): The text content of the resume
+        
+    Returns:
+        dict: Dictionary containing normalized femininity and masculinity scores
+    """
+    # Convert resume text to lowercase for better matching
+    resume_text = resume_text.lower()
+    
+    # Calculate similarity scores for each phrase
+    fem_scores = [compute_similarity(phrase, resume_text) for phrase in femininity_phrases]
+    masc_scores = [compute_similarity(phrase, resume_text) for phrase in masculinity_phrases]
+    
+    # Take the average of top 5 scores for each category
+    fem_scores.sort(reverse=True)
+    masc_scores.sort(reverse=True)
+    
+    top_fem_score = sum(fem_scores[:5]) / 5 if fem_scores else 0
+    top_masc_score = sum(masc_scores[:5]) / 5 if masc_scores else 0
+    
+    # Normalize scores to ensure they sum to less than 1
+    total = top_fem_score + top_masc_score
+    if total > 0:
+        normalized_fem = top_fem_score / (total * 1.5)  # Divide by 1.5 to ensure sum < 1
+        normalized_masc = top_masc_score / (total * 1.5)
+    else:
+        normalized_fem = 0
+        normalized_masc = 0
+    
     return {
-        "femininity_score": fem_score,
-        "masculinity_score": masc_score
+        "femininity_score": normalized_fem,
+        "masculinity_score": normalized_masc
     }
 
-def extract_keywords(text, keywords=None):
+def extract_keywords(text: str) -> Dict[str, Any]:
     """
-    Extract keywords from text with categorization.
-    Returns both frequency and categories of found keywords.
+    Extract keywords from text using cached spaCy model
     """
-    if keywords is None:
-        keywords = default_keywords
+    nlp = load_spacy()
+    if not nlp:
+        return {"frequency": {}, "categories": {"technical_skills": [], "soft_skills": []}}
     
     words = re.findall(r'\b\w+\b', text.lower())
     word_counts = Counter(words)
     
     # Get frequency of keywords
-    keyword_freq = {kw: word_counts.get(kw.lower(), 0) for kw in keywords}
+    keyword_freq = {kw: word_counts.get(kw.lower(), 0) for kw in default_keywords}
     
     # Categorize found keywords
     categories = {
