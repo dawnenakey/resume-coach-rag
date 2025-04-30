@@ -6,6 +6,25 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+import os
+import time
+import threading
+import requests
+
+# Keep-alive function
+def keep_alive():
+    while True:
+        try:
+            # Ping your app URL
+            requests.get("https://dawnenaresumecoach.streamlit.app")
+            time.sleep(300)  # Ping every 5 minutes
+        except:
+            time.sleep(300)
+
+# Start keep-alive in a separate thread
+thread = threading.Thread(target=keep_alive)
+thread.daemon = True
+thread.start()
 
 # Initialize models and APIs
 @st.cache_resource
