@@ -58,7 +58,7 @@ Resume Coach RAG addresses these challenges through:
 
 ### Deployment Options
 - Docker containerization
-- Streamlit Cloud deployment
+- Streamlit Cloud deployment - current application is successful at https://dawnenaresumecoach.streamlit.app/
 - Railway.app alternative deployment
 - Render.com configuration
 
